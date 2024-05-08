@@ -1,0 +1,51 @@
+﻿@page "/login"
+@using BlazorApp.Data
+@using BlazorApp.Model.ViewModel
+@inject MyDBContext DB
+@inject NavigationManager NavManager
+
+
+<h3>Login</h3>
+<hr />
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <EditForm Model="@loginmodel" FormName="LoginForm" Enhance OnValidSubmit="Authenticate">
+            <DataAnnotationsValidator/>
+            <div class="mb-3 text-center flex-column">
+                <img  src="/img/login.png" style="max-height:5rem"/>
+                <h3>Login</h3>
+            </div>
+            <div class="mb-3">
+                <label>Felhasználó név:</label>
+                <InputText @bind-Value="loginmodel.Username" class="form-control" placeholder="UserName"/>
+                <ValidationMessage For="()=>loginmodel.Username"/>
+            </div>
+            <div class="mb-3">
+                <label>Felhasználó név:</label>
+                <InputText type="password" @bind-Value="loginmodel.Password" class="form-control" placeholder="Password" />
+                <ValidationMessage For="()=>loginmodel.Password" />
+            </div>
+            <div class="mb-3 text-center">
+                <span class="text-danger">@errorMessage</span>
+            </div>
+            <div class="mb-3 d-grid gap-3">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </EditForm>
+    </div>
+
+</div>
+
+
+@code {
+    [SupplyParameterFromForm]
+    public LoginViewModel loginmodel { get; set; } = new();
+
+    public string? errorMessage;
+
+    private async Task Authenticate()
+    {
+        
+    }
+
+}
