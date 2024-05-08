@@ -1,6 +1,9 @@
 ﻿@page "/login"
 @using BlazorApp.Data
 @using BlazorApp.Model.ViewModel
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
 @inject MyDBContext DB
 @inject NavigationManager NavManager
 
@@ -38,6 +41,9 @@
 
 
 @code {
+    [CascadingParameter]
+    public HttpContext Httpcontext{ get; set; }
+
     [SupplyParameterFromForm]
     public LoginViewModel loginmodel { get; set; } = new();
 
@@ -45,7 +51,26 @@
 
     private async Task Authenticate()
     {
-        
+        //kiszűrjük hogy van e ilyen user-em
+        var userAccant = DB.Users.Where(x=>x.UserName == loginmodel.Username).FirstOrDefault();
+        //ellenőrzés
+        if (userAccant is null || userAccant.Password != loginmodel.Password)
+        {
+            errorMessage = "A felhasználónév vagy a jelszó nem egyezik";
+            return;
+        }
+        //követési lista
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, loginmodel.Username),
+            new Claim(ClaimTypes.Role, userAccant.Role)
+        };
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        await Httpcontext.SignInAsync(principal);
+        NavManager.NavigateTo("/");
+
     }
 
 }
