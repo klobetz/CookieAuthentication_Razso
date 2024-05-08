@@ -1,10 +1,15 @@
 using BlazorApp.Components;
+using BlazorApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+//DB kapcsolat
+builder.Services.AddDbContext<MyDBContext>(options=>options.UseMySQL(builder.Configuration.GetConnectionString("MyDBConnectionString")));
 
 var app = builder.Build();
 
