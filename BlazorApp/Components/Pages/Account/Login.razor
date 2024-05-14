@@ -42,7 +42,7 @@
 
 @code {
     [CascadingParameter]
-    public HttpContext Httpcontext{ get; set; }
+    public HttpContext? Httpcontext{ get; set; }
 
     [SupplyParameterFromForm]
     public LoginViewModel loginmodel { get; set; } = new();
