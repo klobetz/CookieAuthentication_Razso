@@ -4,9 +4,11 @@
 @inject BlazorApp.Data.MyDBContext DB
 @inject NavigationManager NavManager
 @attribute [Authorize(Roles ="Administrator")]
+@rendermode InteractiveServer
 
 <h3>CreateUser</h3>
 <hr />
+
 <div class="row">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
         <EditForm mathod="post" Model="@newUser" OnValidSubmit="AddNewUser" FormName="Create" Enhance>
