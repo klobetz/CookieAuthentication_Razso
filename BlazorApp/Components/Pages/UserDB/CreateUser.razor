@@ -1,0 +1,59 @@
+﻿@page "/createuser"
+@using BlazorApp.Model.Entities
+@using Microsoft.AspNetCore.Authorization
+@inject BlazorApp.Data.MyDBContext DB
+@inject NavigationManager NavManager
+@attribute [Authorize(Roles ="Administrator")]
+
+<h3>CreateUser</h3>
+<hr />
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <EditForm mathod="post" Model="@newUser" OnValidSubmit="AddNewUser" FormName="Create" Enhance>
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+
+            <div class="mb-3 text-center flex-column">
+                <img src="/img/newUser.png" style="max-height:5rem" />
+                <h3>Add new User</h3>
+            </div>
+
+            <div class="mb-3">
+                <label class="col-form-label">Felhasználó név:</label>
+                <InputText @bind-Value="newUser.UserName" class="form-control" placeholder="UserName" />
+                <ValidationMessage For="()=>newUser.UserName" />
+            </div>
+
+            <div class="mb-3">
+                <label class="col-form-label">Felhasználó név:</label>
+                <InputText type="password" @bind-Value="newUser.Password" class="form-control" placeholder="Password" />
+                <ValidationMessage For="()=>newUser.Password" />
+            </div>
+            <div class="mb-3">
+                <label class="col-form-label">Jogosutság:</label>                
+                <InputSelect @bind-Value="newUser.Role" class="form-select">                    
+                    <option>Administrator</option>
+                    <option>User</option>
+                    <option>Manager</option>
+                </InputSelect>                    
+            </div>
+            
+            <div class="mb-3 d-grid gap-3">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public User newUser { get; set; } = new();
+
+
+    public async Task AddNewUser()
+    {
+        await DB.Users.AddAsync(newUser);
+        await DB.SaveChangesAsync();
+        NavManager.NavigateTo("/");
+    }
+}
